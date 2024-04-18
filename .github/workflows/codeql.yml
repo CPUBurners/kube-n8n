@@ -1,0 +1,31 @@
+name: Kubelinter on Dev Branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  kubelinter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Kubelinter
+        run: |
+          curl -Lo kubelinter.tar.gz https://github.com/stackrox/kube-linter/releases/latest/download/kube-linter-linux.tar.gz
+          tar -xzf kubelinter.tar.gz
+          chmod +x kube-linter
+          sudo mv kube-linter /usr/local/bin/
+
+      - name: lint and post a sarif report
+        run: |
+          kube-linter lint --output-format=sarif --output kube-linter-report.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: kube-linter-report.sarif
