@@ -20,15 +20,11 @@ jobs:
           chmod +x kube-linter
           sudo mv kube-linter /usr/local/bin/
 
-      - name: Lint YAML files and Generate Report
-        continue-on-error: true
-        run: |
-          kubelinter lint ./ --output-format=checkstyle > kubelinter-report.txt
-          cat kubelinter-report.txt
+      - name: Lint YAML files in the repository
+        run: kube-linter lint . > kube-linter-report.txt
 
-
-      - name: Upload Report as Artifact
+      - name: Upload report as an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kubelinter-report
-          path: kubelinter-report.txt
+          name: kube-linter-report
+          path: kube-linter-report.txt
