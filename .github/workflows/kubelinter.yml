@@ -24,11 +24,10 @@ jobs:
         continue-on-error: true
         run: kube-linter lint . > kube-linter-report.txt
 
-      - name: Upload report as an artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload report as sarif
+        uses: github/codeql-action/upload-sarif@v1
         with:
-          name: kube-linter-report
-          path: kube-linter-report.txt
+          sarif_file: kube-linter-report.txt
 
       - name: Fail if the kube-linter report contains lines
         run: |
