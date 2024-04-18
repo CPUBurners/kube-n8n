@@ -2,6 +2,4 @@ checks:
   exclude:
     - "privileged-container"
     - "run-as-non-root"
-    - "read-only-filesystem"
-    # disable limit
-    - "cpu-limit"
+    - "read-only-root-filesystem"
