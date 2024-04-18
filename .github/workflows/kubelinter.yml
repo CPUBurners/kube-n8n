@@ -21,6 +21,7 @@ jobs:
           directory: .
           format: sarif
           output-file: kube-linter-results.sarif
+          config: .github/kubelinter-config.yaml
 
       - name: Scan repo with kube-linter as txt
         continue-on-error: true
