@@ -1,4 +1,5 @@
 name: Kubelinter on Dev Branch
+permissions: write-all
 
 on:
   push:
