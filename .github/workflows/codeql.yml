@@ -29,3 +29,10 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: kube-linter-report.sarif
+
+      - name: Fail if the kube-linter report contains lines
+        run: |
+          if grep -q . kube-linter-report.txt; then
+            echo "kube-linter found issues in the repository"
+            exit 1
+          fi

@@ -13,19 +13,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Scan repo with kube-linter
-        uses: stackrox/kube-linter-action@v1.0.4
-        with:
-          directory: .
-          format: sarif
-          output-file: kube-linter.sarif
+      - name: Install Kubelinter
+        run: |
+          curl -Lo kubelinter.tar.gz https://github.com/stackrox/kube-linter/releases/latest/download/kube-linter-linux.tar.gz
+          tar -xzf kubelinter.tar.gz
+          chmod +x kube-linter
+          sudo mv kube-linter /usr/local/bin/
 
-      - name: Upload SARIF report
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: kube-linter.sarif
+      - name: lint and post a sarif report
+        run: |
+          kube-linter lint --output-format=sarif --output kube-linter-report.sarif
+        continue-on-error: true
 
       - name: Upload SARIF report
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: kube-linter-report.sarif
+
+      - name: Fail if the kube-linter report contains lines
+        run: |
+          if grep -q . kube-linter-report.txt; then
+            echo "kube-linter found issues in the repository"
+            exit 1
+          fi
