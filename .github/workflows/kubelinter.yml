@@ -30,9 +30,9 @@ jobs:
           name: kube-linter-report
           path: kube-linter-report.txt
 
-      - name: Fail if there are linting errors
+      - name: Fail if the kube-linter report contains lines
         run: |
-          if grep -q "error" kube-linter-report.txt; then
-            echo "Linting errors found"
+          if grep -q . kube-linter-report.txt; then
+            echo "kube-linter found issues in the repository"
             exit 1
           fi
