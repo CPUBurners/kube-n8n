@@ -6,8 +6,6 @@ metadata:
   name: postgres
   namespace: n8n
 spec:
-  securityContext:
-    runAsNonRoot: true
   replicas: 1
   selector:
     matchLabels:
