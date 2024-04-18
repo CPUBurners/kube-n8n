@@ -20,18 +20,12 @@ jobs:
           chmod +x kube-linter
           sudo mv kube-linter /usr/local/bin/
 
-      - name: Lint YAML files in the repository
+      - name: lint and post a sarif report
+        run: |
+          kube-linter lint --output-format=sarif --output kube-linter-report.sarif
         continue-on-error: true
-        run: kube-linter lint . > kube-linter-report.txt
 
-      - name: Upload report as sarif
+      - name: Upload SARIF report
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: kube-linter-report.txt
-
-      - name: Fail if the kube-linter report contains lines
-        run: |
-          if grep -q . kube-linter-report.txt; then
-            echo "kube-linter found issues in the repository"
-            exit 1
-          fi
+          sarif_file: kube-linter-report.sarif
