@@ -22,6 +22,14 @@ jobs:
           format: sarif
           output-file: kube-linter-results.sarif
 
+      - name: Scan repo with kube-linter as txt
+        continue-on-error: true
+        uses: stackrox/kube-linter-action@v1.0.4
+        with:
+          directory: .
+          format: txt
+          output-file: kube-linter-results.txt
+
       - name: Cat results
         run: cat kube-linter-results.sarif
 
@@ -30,3 +38,10 @@ jobs:
         with:
           sarif_file: kube-linter-results.sarif
           category: 'KubeLinter'
+
+      
+      - name: upload txt results to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: kube-linter-results
+          path: kube-linter-results.txt
