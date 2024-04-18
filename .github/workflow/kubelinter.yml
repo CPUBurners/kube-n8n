@@ -1,0 +1,42 @@
+name: Kubelinter on Dev Branch
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  kubelinter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Kubelinter
+        run: |
+          curl -Lo kubelinter.tar.gz https://github.com/stackrox/kube-linter/releases/latest/download/kube-linter-linux.tar.gz
+          tar -xzf kubelinter.tar.gz
+          chmod +x kube-linter
+          sudo mv kube-linter /usr/local/bin/
+
+      - name: Lint YAML files and Generate Report
+        continue-on-error: true
+        run: |
+          kubelinter lint -o checkstyle > kubelinter-report.txt || true
+
+
+      - name: Upload Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kubelinter-report
+          path: kubelinter-report.txt
+
+      - name: Create Pull Request if Passed
+        if: success()
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "main"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "KubeLinter Passed: Merge dev into main"
+          pr_body: "All checks passed. Auto-merging dev into main."
