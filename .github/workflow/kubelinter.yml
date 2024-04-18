@@ -31,12 +31,3 @@ jobs:
         with:
           name: kubelinter-report
           path: kubelinter-report.txt
-
-      - name: Create Pull Request if Passed
-        if: success()
-        uses: repo-sync/pull-request@v2
-        with:
-          destination_branch: "main"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: "KubeLinter Passed: Merge dev into main"
-          pr_body: "All checks passed. Auto-merging dev into main."
