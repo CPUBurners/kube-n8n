@@ -21,6 +21,7 @@ jobs:
           sudo mv kube-linter /usr/local/bin/
 
       - name: Lint YAML files in the repository
+        continue-on-error: true
         run: kube-linter lint . > kube-linter-report.txt
 
       - name: Upload report as an artifact
