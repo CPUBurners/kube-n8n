@@ -39,3 +39,5 @@ jobs:
         with:
           sarif_file: kube-linter-results.sarif
           category: 'KubeLinter'
+      
+          
