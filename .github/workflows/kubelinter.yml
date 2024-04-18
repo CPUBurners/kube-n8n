@@ -23,7 +23,8 @@ jobs:
       - name: Lint YAML files and Generate Report
         continue-on-error: true
         run: |
-          kubelinter lint -o checkstyle > kubelinter-report.txt
+          kubelinter lint ./ --output-format=checkstyle > kubelinter-report.txt
+          cat kubelinter-report.txt
 
 
       - name: Upload Report as Artifact
